@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # SERVICE 1: DATA LAPANGAN
+  court-service:
+    build: ./court-service
+    container_name: padel-court
+    ports:
+      - "4001:4000"
+    networks:
+      - padel-net
+
+  # SERVICE 2: BOOKING
+  booking-service:
+    build: ./booking-service
+    container_name: padel-booking
+    ports:
+      - "4002:4000"
+    depends_on:
+      - court-service
+    networks:
+      - padel-net
+
+  # SERVICE 3: WEBSITE TAMPILAN (FRONTEND) 
+  frontend:
+    build: ./frontend
+    container_name: padel-web
+    ports:
+      - "3000:3000"  
+    depends_on:
+      - court-service
+      - booking-service
+    networks:
+      - padel-net
+
+networks:
+  padel-net:
+    driver: bridge
