@@ -4,45 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Padel Booking System</title>
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background-color: #eef2f5; color: #333; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        .hidden { display: none !important; }
-
-        /* AUTH STYLE */
-        .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
-        .auth-card { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 400px; text-align: center; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; color: #555; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        
-        /* BUTTONS */
-        .btn { padding: 12px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; width: 100%; color: white; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
-        .btn-primary { background-color: #007bff; }
-        .btn-success { background-color: #28a745; }
-        .btn-warning { background-color: #ffc107; color: #333; } /* Tombol Edit */
-        .btn-danger { background-color: #dc3545; }
-        .btn-secondary { background-color: #6c757d; }
-        .btn-small { width: auto; padding: 8px 16px; font-size: 13px; }
-
-        /* DASHBOARD */
-        .dashboard-container { background: white; padding: 30px; border-radius: 12px; margin-top: 30px; min-height: 80vh; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .card { border: 1px solid #eee; padding: 20px; margin-bottom: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; background: #fff; }
-        
-        /* TABLE */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border-bottom: 1px solid #eee; padding: 15px; text-align: left; }
-        th { background-color: #343a40; color: white; }
-        
-        /* MODAL POPUP */
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index: 1000; }
-        .modal-box { background:white; padding:30px; border-radius:10px; width:400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        
-        /* LINKS */
-        a { text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 

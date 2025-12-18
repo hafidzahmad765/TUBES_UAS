@@ -1,6 +1,6 @@
 // --- KONFIGURASI API ---
-const COURT_API = 'http://localhost:4001';
-const BOOKING_API = 'http://localhost:4002';
+const COURT_API = 'http://localhost:4001';   // Port 4001 (Admin Auth & Court Data)
+const BOOKING_API = 'http://localhost:4002'; // Port 4002 (User Auth & Booking Data)
 
 let authToken = '';
 let currentUser = '';
@@ -16,78 +16,76 @@ window.onload = function() {
         authToken = storedToken;
         currentUser = storedUser;
         currentRole = storedRole;
-        showDashboard(); // Langsung ke dashboard
-    } else {
-        // Biarkan di halaman login
+        showDashboard();
     }
 }
 
-// --- NAVIGASI AUTH UI ---
+// --- NAVIGASI UI ---
 function switchToRegister() {
     document.getElementById('login-card').classList.add('hidden');
     document.getElementById('register-card').classList.remove('hidden');
 }
-
 function switchToLogin() {
     document.getElementById('register-card').classList.add('hidden');
     document.getElementById('login-card').classList.remove('hidden');
 }
-
 function showDashboard() {
     document.getElementById('auth-section').classList.add('hidden');
     document.getElementById('dashboard-section').classList.remove('hidden');
-    
-    // Panggil fungsi init dashboard di script.js
-    initDashboard(currentUser, currentRole);
-}
-
-// --- FUNGSI REGISTER (API) ---
-async function register() {
-    const userIn = document.getElementById('reg-username').value.trim();
-    const passIn = document.getElementById('reg-password').value.trim();
-
-    if(!userIn || !passIn) return alert("Username dan Password wajib diisi!");
-
-    // Mutation Register (Role otomatis 'user' di backend)
-    const mutation = `mutation { register(username: "${userIn}", password: "${passIn}") { id username } }`;
-
-    try {
-        const res = await fetchGraphQL(BOOKING_API, mutation);
-        
-        if (res.errors) {
-            alert("Gagal Register: " + res.errors[0].message);
-        } else {
-            alert("✅ Registrasi Berhasil! Silakan Login.");
-            // Bersihkan form
-            document.getElementById('reg-username').value = '';
-            document.getElementById('reg-password').value = '';
-            // Pindah ke Login
-            switchToLogin();
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Terjadi kesalahan server backend.");
+    // Panggil fungsi initDashboard yang ada di script.js
+    if(typeof initDashboard === "function") {
+        initDashboard(currentUser, currentRole);
     }
 }
 
-// --- FUNGSI LOGIN (API) ---
+// --- FUNGSI REGISTER ---
+async function register() {
+    const userIn = document.getElementById('reg-username').value.trim();
+    const passIn = document.getElementById('reg-password').value.trim();
+    if(!userIn || !passIn) return alert("Isi data lengkap!");
+
+    let apiURL = BOOKING_API;
+    let mutation = `mutation { register(username: "${userIn}", password: "${passIn}") { id username } }`;
+
+    // LOGIKA SPESIAL: Jika username 'admin', daftar ke Court Service
+    if(userIn.toLowerCase() === 'admin') {
+        apiURL = COURT_API;
+        mutation = `mutation { registerAdmin(username: "${userIn}", password: "${passIn}") { id username } }`;
+    }
+
+    try {
+        const res = await fetchGraphQL(apiURL, mutation);
+        if (res.errors) alert("Gagal: " + res.errors[0].message);
+        else {
+            alert("✅ Registrasi Berhasil!");
+            switchToLogin();
+        }
+    } catch (err) { alert("Error Server"); }
+}
+
+// --- FUNGSI LOGIN (ROUTING OTOMATIS) ---
 async function login() {
     const userIn = document.getElementById('login-username').value.trim();
     const passIn = document.getElementById('login-password').value.trim();
+    if(!userIn || !passIn) return alert("Isi username & password!");
 
-    if(!userIn || !passIn) return alert("Isi username dan password!");
+    let apiURL = BOOKING_API; // Default ke User (Booking Service)
+    let mutation = `mutation { login(username: "${userIn}", password: "${passIn}") { token user { username role } } }`;
 
-    const mutation = `mutation { login(username: "${userIn}", password: "${passIn}") { token user { username role } } }`;
+    // JIKA ADMIN -> LOGIN KE COURT SERVICE
+    if(userIn.toLowerCase() === 'admin') {
+        apiURL = COURT_API;
+        mutation = `mutation { loginAdmin(username: "${userIn}", password: "${passIn}") { token user { username role } } }`;
+    }
 
     try {
-        const res = await fetchGraphQL(BOOKING_API, mutation);
-
+        const res = await fetchGraphQL(apiURL, mutation);
         if (res.errors) {
             alert("Login Gagal: " + res.errors[0].message);
         } else {
-            const data = res.data.login;
+            // Deteksi respon admin vs user
+            const data = res.data.login || res.data.loginAdmin;
             
-            // Simpan Token
             authToken = data.token;
             currentUser = data.user.username;
             currentRole = data.user.role;
@@ -96,29 +94,16 @@ async function login() {
             localStorage.setItem('padelUser', currentUser);
             localStorage.setItem('padelRole', currentRole);
 
-            // Masuk Dashboard
             showDashboard();
         }
-    } catch (err) {
-        console.error(err);
-        alert("Gagal koneksi ke server.");
-    }
+    } catch (err) { alert("Gagal koneksi ke server."); }
 }
 
-function logout() {
-    localStorage.clear();
-    location.reload();
-}
+function logout() { localStorage.clear(); location.reload(); }
 
-// --- HELPER FETCH ---
 async function fetchGraphQL(url, query) {
     const headers = { 'Content-Type': 'application/json' };
     if(authToken) headers['Authorization'] = `Bearer ${authToken}`;
-
-    const res = await fetch(url, {
-        method: 'POST', 
-        headers: headers,
-        body: JSON.stringify({ query })
-    });
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify({ query }) });
     return await res.json();
 }
