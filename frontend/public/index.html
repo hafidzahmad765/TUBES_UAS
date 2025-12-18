@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Booking System</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background-color: #eef2f5; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .hidden { display: none !important; }
+
+        /* AUTH STYLE */
+        .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
+        .auth-card { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 400px; text-align: center; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; color: #555; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        
+        /* BUTTONS */
+        .btn { padding: 12px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; width: 100%; color: white; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background-color: #007bff; }
+        .btn-success { background-color: #28a745; }
+        .btn-warning { background-color: #ffc107; color: #333; } /* Tombol Edit */
+        .btn-danger { background-color: #dc3545; }
+        .btn-secondary { background-color: #6c757d; }
+        .btn-small { width: auto; padding: 8px 16px; font-size: 13px; }
+
+        /* DASHBOARD */
+        .dashboard-container { background: white; padding: 30px; border-radius: 12px; margin-top: 30px; min-height: 80vh; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card { border: 1px solid #eee; padding: 20px; margin-bottom: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border-bottom: 1px solid #eee; padding: 15px; text-align: left; }
+        th { background-color: #343a40; color: white; }
+        
+        /* MODAL POPUP */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index: 1000; }
+        .modal-box { background:white; padding:30px; border-radius:10px; width:400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        
+        /* LINKS */
+        a { text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-section" class="auth-wrapper">
+        
+        <div id="login-card" class="auth-card">
+            <h1>🎾 Padel Login</h1>
+            <p style="color:#666; font-size:14px;">Masuk untuk mulai booking lapangan</p>
+            
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="login-username" placeholder="Masukkan username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="Masukkan password">
+            </div>
+            
+            <button onclick="login()" class="btn btn-primary">Masuk Aplikasi 🔐</button>
+            
+            <p style="margin-top:20px; font-size:13px;">
+                Belum punya akun? <a onclick="switchToRegister()" style="color:#007bff; cursor:pointer;"><b>Daftar Sekarang</b></a>
+            </p>
+            
+            <div style="margin-top:20px; padding:10px; background:#fff3cd; color:#856404; font-size:12px; border-radius:5px; border:1px solid #ffeeba;">
+                <b>🔔 Info Login Admin:</b><br>
+                Username: <b>admin</b> | Password: <b>admin</b>
+            </div>
+        </div>
+
+        <div id="register-card" class="auth-card hidden">
+            <h1 style="color:#28a745;">📝 Daftar Akun</h1>
+            <p style="color:#666; font-size:14px;">Buat akun baru (Khusus User)</p>
+            
+            <div class="form-group">
+                <label>Buat Username Baru</label>
+                <input type="text" id="reg-username" placeholder="Contoh: hafidz">
+            </div>
+            <div class="form-group">
+                <label>Buat Password</label>
+                <input type="password" id="reg-password" placeholder="Minimal 3 karakter">
+            </div>
+            
+            <button onclick="register()" class="btn btn-success">Daftar Sekarang ✅</button>
+            
+            <p style="margin-top:20px; font-size:13px;">
+                Sudah punya akun? <a onclick="switchToLogin()" style="color:#007bff; cursor:pointer;"><b>Login Disini</b></a>
+            </p>
+        </div>
+    </div>
+
+    <div id="dashboard-section" class="container hidden">
+        <div class="dashboard-container">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f1f1; padding-bottom:15px; margin-bottom:25px;">
+                <h2 id="welcome-msg" style="margin:0;">Halo!</h2>
+                <button onclick="logout()" class="btn btn-danger btn-small">Logout</button>
+            </div>
+
+            <div id="user-view" class="hidden">
+                <h3 style="margin-bottom:20px;">📍 Pilih Lapangan</h3>
+                <div id="user-court-list">Loading...</div>
+            </div>
+
+            <div id="admin-view" class="hidden">
+                <h3 style="color:#fd7e14;">🛡️ Dashboard Admin</h3>
+                <p>Pilih lapangan untuk mengelola jadwal booking.</p>
+                <div id="admin-court-list">Loading...</div>
+            </div>
+
+            <div id="dynamic-content"></div>
+        </div>
+    </div>
+
+    <div id="admin-edit-modal" class="hidden modal-overlay">
+        <div class="modal-box">
+            <h3 style="margin-top:0; color:#007bff;">✏️ Edit Jadwal</h3>
+            <input type="hidden" id="edit-booking-id">
+            
+            <div style="margin-bottom:15px;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">Tanggal Baru:</label>
+                <input type="date" id="edit-date" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:5px;">
+            </div>
+            
+            <div style="margin-bottom:20px;">
+                <label style="display:block; font-weight:bold; margin-bottom:5px;">Jam Baru:</label>
+                <select id="edit-time" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:5px;">
+                    <option value="08:00 - 09:00">08:00 - 09:00</option>
+                    <option value="09:00 - 10:00">09:00 - 10:00</option>
+                    <option value="10:00 - 11:00">10:00 - 11:00</option>
+                    <option value="16:00 - 17:00">16:00 - 17:00</option>
+                    <option value="19:00 - 20:00">19:00 - 20:00</option>
+                    <option value="20:00 - 21:00">20:00 - 21:00</option>
+                </select>
+            </div>
+            
+            <div style="display:flex; gap:10px;">
+                <button onclick="saveAdminEdit()" class="btn btn-success" style="flex:1;">Simpan</button>
+                <button onclick="closeAdminEdit()" class="btn btn-secondary" style="flex:1;">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

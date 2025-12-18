@@ -1,12 +1,49 @@
 version: '3.8'
 
 services:
+  # DATABASE MYSQL
+  mysql-db:
+    image: mysql:5.7
+    container_name: padel-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "${PORT_MYSQL}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - padel-net
+
+  # GUI DATABASE (PHPMYADMIN)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: padel-admin
+    restart: always
+    environment:
+      PMA_HOST: mysql-db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "${PORT_PHPMYADMIN}:80"
+    depends_on:
+      - mysql-db
+    networks:
+      - padel-net
+
   # SERVICE 1: DATA LAPANGAN
   court-service:
     build: ./court-service
     container_name: padel-court
     ports:
-      - "4001:4000"
+      - "${PORT_COURT}:4000"
+    depends_on:
+      - mysql-db
+    environment:
+      DB_HOST: mysql-db
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
     networks:
       - padel-net
 
@@ -15,24 +52,30 @@ services:
     build: ./booking-service
     container_name: padel-booking
     ports:
-      - "4002:4000"
+      - "${PORT_BOOKING}:4000"
     depends_on:
       - court-service
+      - mysql-db
+    environment:
+      DB_HOST: mysql-db
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
     networks:
       - padel-net
 
-  # SERVICE 3: WEBSITE TAMPILAN (FRONTEND) 
+  # FRONTEND
   frontend:
     build: ./frontend
     container_name: padel-web
     ports:
-      - "3000:3000"  
-    depends_on:
-      - court-service
-      - booking-service
+      - "${PORT_FRONTEND}:3000"
     networks:
       - padel-net
 
 networks:
   padel-net:
     driver: bridge
+
+volumes:
+  mysql-data:
