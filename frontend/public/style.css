@@ -2,8 +2,24 @@ body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background-co
 .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 .hidden { display: none !important; }
 
-/* AUTH STYLE */
-.auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); }
+/* AUTH STYLE - DENGAN GAMBAR BACKGROUND LOKAL */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    
+    /* Layer 1: Warna Biru Transparan (Overlay) */
+    /* Layer 2: Gambar Lokal (bnbnb-1.jpg) */
+    background: linear-gradient(rgba(0, 123, 255, 0.6), rgba(0, 86, 179, 0.7)),
+                url('bnbnb-1.jpg');
+    
+    /* Pengaturan Posisi Gambar */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .auth-card { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 .form-group { margin-bottom: 20px; text-align: left; }
 .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; color: #555; }
@@ -13,7 +29,7 @@ body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background-co
 .btn { padding: 12px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; width: 100%; color: white; transition: 0.2s; }
 .btn:hover { opacity: 0.9; }
 .btn-primary { background-color: #007bff; }
-.btn-success { background-color: #28a745; }
+.btn-success { background-color: #007bff; }
 .btn-warning { background-color: #ffc107; color: #333; } /* Tombol Edit */
 .btn-danger { background-color: #dc3545; }
 .btn-secondary { background-color: #6c757d; }
