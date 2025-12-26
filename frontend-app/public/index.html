@@ -4,102 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Padel Booking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <div class="bg-overlay"></div>
+
     <div id="auth-section" class="auth-wrapper">
         
-        <div id="login-card" class="auth-card">
-            <h1>🎾 Padel Login</h1>
-            <p style="color:#666; font-size:14px;">Masuk untuk mulai booking lapangan</p>
+        <div id="login-card" class="glass-card auth-card">
+            <div class="icon-header">
+                <i class="ri-tennis-ball-fill"></i>
+            </div>
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Masuk untuk mulai booking lapangan</p>
             
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="login-username" placeholder="Masukkan username">
+                <label><i class="ri-user-line"></i> Username</label>
+                <input type="text" id="login-username" placeholder="Ketik username kamu...">
             </div>
             <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="login-password" placeholder="Masukkan password">
+                <label><i class="ri-lock-password-line"></i> Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
             </div>
             
-            <button onclick="login()" class="btn btn-primary">Login</button>
+            <button onclick="login()" class="btn btn-primary btn-block">
+                <span>Login Sekarang</span> <i class="ri-arrow-right-line"></i>
+            </button>
             
-            <p style="margin-top:20px; font-size:13px;">
-                Belum punya akun? <a onclick="switchToRegister()" style="color:#007bff; cursor:pointer;"><b>Daftar Sekarang</b></a>
+            <p class="switch-auth">
+                Belum punya akun? <a onclick="switchToRegister()">Daftar Sekarang</a>
             </p>
-            
         </div>
 
-        <div id="register-card" class="auth-card hidden">
-            <h1 style="color:#000000;">📝 Daftar Akun</h1>
-            <p style="color:#666; font-size:14px;">Buat akun baru (Khusus User)</p>
+        <div id="register-card" class="glass-card auth-card hidden">
+            <div class="icon-header color-green">
+                <i class="ri-user-add-line"></i>
+            </div>
+            <h1>Buat Akun Baru</h1>
+            <p class="subtitle">Bergabunglah dengan komunitas Padel kami</p>
             
             <div class="form-group">
-                <label>Buat Username Baru</label>
-                <input type="text" id="reg-username" placeholder="Contoh: hafidz">
+                <label><i class="ri-user-smile-line"></i> Username Baru</label>
+                <input type="text" id="reg-username" placeholder="Contoh: Hafidz">
             </div>
             <div class="form-group">
-                <label>Buat Password</label>
+                <label><i class="ri-key-2-line"></i> Buat Password</label>
                 <input type="password" id="reg-password" placeholder="Minimal 3 karakter">
             </div>
             
-            <button onclick="register()" class="btn btn-success">Register</button>
+            <button onclick="register()" class="btn btn-success btn-block">
+                <span>Daftar Akun</span> <i class="ri-check-line"></i>
+            </button>
             
-            <p style="margin-top:20px; font-size:13px;">
-                Sudah punya akun? <a onclick="switchToLogin()" style="color:#007bff; cursor:pointer;"><b>Login Disini</b></a>
+            <p class="switch-auth">
+                Sudah punya akun? <a onclick="switchToLogin()">Login Disini</a>
             </p>
         </div>
     </div>
 
     <div id="dashboard-section" class="container hidden">
-        <div class="dashboard-container">
+        <div class="glass-card dashboard-container">
             
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f1f1; padding-bottom:15px; margin-bottom:25px;">
-                <h2 id="welcome-msg" style="margin:0;">Halo!</h2>
-                <button onclick="logout()" class="btn btn-danger btn-small">Logout</button>
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="avatar"><i class="ri-user-3-fill"></i></div>
+                    <div>
+                        <h2 id="welcome-msg">Halo!</h2>
+                        <span class="badge">Member Active</span>
+                    </div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger btn-small">
+                    <i class="ri-logout-box-r-line"></i> Logout
+                </button>
             </div>
 
-            <div id="user-view" class="hidden">
-                <h3 style="margin-bottom:20px;">📍 Pilih Lapangan</h3>
-                <div id="user-court-list">Loading...</div>
+            <hr class="divider">
+
+            <div id="user-view" class="hidden animate-fade">
+                <div class="section-title">
+                    <h3><i class="ri-map-pin-user-line"></i> Pilih Lapangan</h3>
+                    <p>Temukan lapangan terbaik untuk bermain hari ini.</p>
+                </div>
+                <div id="user-court-list" class="grid-container">Loading...</div>
             </div>
 
-            <div id="admin-view" class="hidden">
-                <h3 style="color:#fd7e14;">🛡️ Dashboard Admin</h3>
-                <p>Pilih lapangan untuk mengelola jadwal booking.</p>
-                <div id="admin-court-list">Loading...</div>
+            <div id="admin-view" class="hidden animate-fade">
+                <div class="section-title">
+                    <h3 style="color:#4f46e5;"><i class="ri-admin-line"></i> Admin Dashboard</h3>
+                    <p>Kelola jadwal dan booking lapangan.</p>
+                </div>
+                <div id="admin-court-list" class="grid-container">Loading...</div>
             </div>
 
-            <div id="dynamic-content"></div>
+            <div id="dynamic-content" class="animate-fade"></div>
         </div>
     </div>
 
     <div id="admin-edit-modal" class="hidden modal-overlay">
-        <div class="modal-box">
-            <h3 style="margin-top:0; color:#007bff;">✏️ Edit Jadwal</h3>
+        <div class="glass-card modal-box">
+            <div class="modal-header">
+                <h3><i class="ri-edit-2-line"></i> Edit Jadwal</h3>
+                <button onclick="closeAdminEdit()" class="btn-icon"><i class="ri-close-line"></i></button>
+            </div>
+            
             <input type="hidden" id="edit-booking-id">
             
-            <div style="margin-bottom:15px;">
-                <label style="display:block; font-weight:bold; margin-bottom:5px;">Tanggal Baru:</label>
-                <input type="date" id="edit-date" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:5px;">
+            <div class="form-group">
+                <label>Tanggal Baru</label>
+                <input type="date" id="edit-date">
             </div>
             
-            <div style="margin-bottom:20px;">
-                <label style="display:block; font-weight:bold; margin-bottom:5px;">Jam Baru:</label>
-                <select id="edit-time" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:5px;">
-                    <option value="08:00 - 09:00">08:00 - 09:00</option>
-                    <option value="09:00 - 10:00">09:00 - 10:00</option>
-                    <option value="10:00 - 11:00">10:00 - 11:00</option>
-                    <option value="16:00 - 17:00">16:00 - 17:00</option>
-                    <option value="19:00 - 20:00">19:00 - 20:00</option>
-                    <option value="20:00 - 21:00">20:00 - 21:00</option>
-                </select>
+            <div class="form-group">
+                <label>Jam Baru</label>
+                <div class="select-wrapper">
+                    <select id="edit-time">
+                        <option value="08:00 - 09:00">08:00 - 09:00</option>
+                        <option value="09:00 - 10:00">09:00 - 10:00</option>
+                        <option value="10:00 - 11:00">10:00 - 11:00</option>
+                        <option value="16:00 - 17:00">16:00 - 17:00</option>
+                        <option value="19:00 - 20:00">19:00 - 20:00</option>
+                        <option value="20:00 - 21:00">20:00 - 21:00</option>
+                    </select>
+                </div>
             </div>
             
-            <div style="display:flex; gap:10px;">
-                <button onclick="saveAdminEdit()" class="btn btn-success" style="flex:1;">Simpan</button>
-                <button onclick="closeAdminEdit()" class="btn btn-secondary" style="flex:1;">Batal</button>
+            <div class="modal-actions">
+                <button onclick="closeAdminEdit()" class="btn btn-secondary">Batal</button>
+                <button onclick="saveAdminEdit()" class="btn btn-success">Simpan Perubahan</button>
             </div>
         </div>
     </div>

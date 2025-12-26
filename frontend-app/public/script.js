@@ -3,10 +3,8 @@ let currentAdminCourtId = '';
 
 // --- FUNGSI INIT (Dipanggil dari auth.js setelah login) ---
 function initDashboard(user, role) {
-    // Tampilkan nama user
     document.getElementById('welcome-msg').innerText = `Halo, ${user} 👋`;
 
-    // Cek Role untuk menentukan tampilan
     if (role === 'admin') {
         document.getElementById('admin-view').classList.remove('hidden');
         document.getElementById('user-view').classList.add('hidden');
@@ -21,7 +19,6 @@ function initDashboard(user, role) {
 // ==========================================
 // BAGIAN 1: LOGIKA USER (BOOKING)
 // ==========================================
-
 async function loadCourtsForUser() {
     const courts = await fetchCourts();
     let html = '';
@@ -30,8 +27,8 @@ async function loadCourtsForUser() {
         <div class="card">
             <div>
                 <h4 style="margin:0;">${c.name}</h4>
-                <small style="color:#666;">📍 ${c.location}</small><br>
-                <b style="color:green;">Rp ${c.price.toLocaleString()} / jam</b>
+                <small>📍 ${c.location}</small><br>
+                <b>Rp ${c.price.toLocaleString()} / jam</b>
             </div>
             <button class="btn btn-primary btn-small" onclick="showBookingForm('${c.id}', '${c.name}')">Booking ➝</button>
         </div>`;
@@ -43,7 +40,6 @@ function showBookingForm(courtId, courtName) {
     document.getElementById('user-view').classList.add('hidden');
     const contentDiv = document.getElementById('dynamic-content');
     
-    // Render Form Booking
     contentDiv.innerHTML = `
         <div style="max-width:600px; margin:0 auto;">
             <button onclick="resetUserView()" class="btn btn-secondary btn-small" style="margin-bottom:15px;">⬅ Kembali</button>
@@ -97,25 +93,25 @@ async function submitBooking(courtId) {
         await fetchGraphQL(BOOKING_API, mutation);
         alert("✅ Booking Berhasil!");
         resetUserView();
-    } catch(err) { 
-        alert("Gagal booking."); 
-    }
+    } catch(err) { alert("Gagal booking."); }
 }
 
 // ==========================================
 // BAGIAN 2: LOGIKA ADMIN (JADWAL, EDIT, HAPUS)
 // ==========================================
-
 async function loadCourtsForAdmin() {
     const courts = await fetchCourts();
     let html = '';
     courts.forEach(c => {
-        html += `<div class="card" style="border-left:5px solid #fd7e14;">
+        // MENGGUNAKAN STYLE BARU (Royal Indigo)
+        html += `<div class="card card-admin-border">
             <div>
-                <h4 style="margin:0;">${c.name}</h4>
-                <small>${c.location}</small>
+                <h4 style="margin:0; color:var(--dark);">${c.name}</h4>
+                <small style="color:var(--secondary);"><i class="ri-map-pin-line"></i> ${c.location}</small>
             </div>
-            <button class="btn btn-warning btn-small" onclick="loadAdminSchedule('${c.id}', '${c.name}')">📂 Lihat Jadwal</button>
+            <button class="btn btn-admin btn-small" onclick="loadAdminSchedule('${c.id}', '${c.name}')">
+                <i class="ri-calendar-check-line"></i> Kelola Jadwal
+            </button>
         </div>`;
     });
     document.getElementById('admin-court-list').innerHTML = html;
@@ -144,7 +140,6 @@ async function loadAdminSchedule(courtId, courtName) {
             </thead>
             <tbody id="admin-tbody"><tr><td colspan="3">Loading...</td></tr></tbody>
         </table>`;
-        
     refreshSchedule();
 }
 
@@ -172,14 +167,13 @@ async function refreshSchedule() {
             <td><b>${b.user}</b></td>
             <td>${b.date}</td>
             <td>
-                <button class="btn btn-warning btn-small" style="width:auto; display:inline-block; margin-right:5px;" onclick="openEditModal('${b.id}')">Edit ✏️</button>
-                <button class="btn btn-danger btn-small" style="width:auto; display:inline-block;" onclick="deleteItem('${b.id}')">Hapus 🗑️</button>
+                <button class="btn btn-warning btn-small" style="margin-right:5px;" onclick="openEditModal('${b.id}')">Edit ✏️</button>
+                <button class="btn btn-danger btn-small" onclick="deleteItem('${b.id}')">Hapus 🗑️</button>
             </td>
         </tr>`;
     });
 }
 
-// --- FUNGSI HAPUS ---
 async function deleteItem(id) {
     if(!confirm("Hapus booking ini?")) return;
     await fetchGraphQL(BOOKING_API, `mutation { deleteBooking(id: "${id}") }`);
@@ -200,21 +194,16 @@ async function saveAdminEdit() {
     const id = document.getElementById('edit-booking-id').value;
     const date = document.getElementById('edit-date').value;
     const time = document.getElementById('edit-time').value;
-    
     if(!date || !time) return alert("Pilih tanggal dan jam baru!");
-    
     const fullDate = `${date}, Jam ${time}`;
     
     await fetchGraphQL(BOOKING_API, `mutation { updateBooking(id: "${id}", date: "${fullDate}") { id } }`);
-    
     alert("✅ Jadwal Berhasil Diubah!");
     closeAdminEdit();
     refreshSchedule();
 }
 
-// --- HELPER FETCH COURTS ---
 async function fetchCourts() {
-    // COURT_API diambil dari auth.js (Global variable)
     const res = await fetchGraphQL(COURT_API, `query { courts { id name location price } }`);
     return res.data.courts || [];
 }
