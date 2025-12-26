@@ -90,9 +90,13 @@ const resolvers = {
   }
 };
 
-// 5. SERVER SETUP
+// ... (Bagian 1-4 biarkan saja) ...
+
+// 5. SERVER SETUP (PASTIKAN BAGIAN INI ADA)
+// Jangan sampai baris ini hilang!
 const server = new ApolloServer({ typeDefs, resolvers, cors: { origin: '*', credentials: true } });
 
+// BARU KEMUDIAN FUNGSI STARTSERVER
 const startServer = async () => {
     try {
         await sequelize.authenticate();
@@ -109,7 +113,7 @@ const startServer = async () => {
             ]);
         }
 
-        // Auto Seeding Admin (admin/admin)
+        // Auto Seeding Admin
         const adminExists = await Admin.findOne({ where: { username: 'admin' } });
         if (!adminExists) {
             const hash = await bcrypt.hash('admin', 10);
@@ -117,7 +121,11 @@ const startServer = async () => {
             console.log("⚙️ Akun Admin Default Dibuat: admin/admin");
         }
 
-        server.listen({ port: 4000 }).then(({ url }) => {
+        // PORT 4001
+        const PORT = process.env.PORT || 4001;
+
+        // Di sini kita panggil variabel 'server' yang didefinisikan di atas tadi
+        server.listen({ port: PORT }).then(({ url }) => {
             console.log(`🚀 Court Service ready at ${url}`);
         });
     } catch (err) {

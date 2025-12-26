@@ -1,6 +1,8 @@
 // --- KONFIGURASI API ---
-const COURT_API = 'http://localhost:4001';   // Port 4001 (Admin Auth & Court Data)
-const BOOKING_API = 'http://localhost:4002'; // Port 4002 (User Auth & Booking Data)
+const API_GATEWAY = 'http://localhost:3000';
+
+const COURT_API = `${API_GATEWAY}/court-api`;   // Akan diproxy ke port 4001
+const BOOKING_API = `${API_GATEWAY}/booking-api`; // Akan diproxy ke port 4002
 
 let authToken = '';
 let currentUser = '';

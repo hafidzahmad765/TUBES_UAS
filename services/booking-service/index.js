@@ -115,7 +115,14 @@ const startServer = async () => {
         await sequelize.authenticate();
         await sequelize.sync();
         console.log("✅ Booking Service Ready (User DB Ready)");
-        server.listen({ port: 4000 }).then(({ url }) => console.log(`🚀 Booking at ${url}`));
-    } catch (e) { setTimeout(startServer, 5000); }
+        
+        // PERUBAHAN: Gunakan process.env.PORT atau 4002
+        const PORT = process.env.PORT || 4002; 
+        
+        server.listen({ port: PORT }).then(({ url }) => console.log(`🚀 Booking at ${url}`));
+    } catch (e) { 
+        console.error("Gagal start server, retry dalam 5 detik...", e);
+        setTimeout(startServer, 5000); 
+    }
 };
 startServer();
