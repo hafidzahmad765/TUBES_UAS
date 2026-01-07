@@ -1,16 +1,15 @@
-/* --- VARIABLES & RESET --- */
 :root {
-    --primary: #3b82f6;       /* Modern Blue (User) */
+    --primary: #3b82f6;      
     --primary-dark: #2563eb;
     
-    /* WARNA BARU: TEMA ADMIN (ROYAL INDIGO) */
+
     --admin-primary: #4f46e5; 
     --admin-dark: #3730a3;
 
-    --secondary: #64748b;     /* Slate Gray */
-    --success: #10b981;       /* Emerald Green */
-    --warning: #f59e0b;       /* Amber */
-    --danger: #ef4444;        /* Red */
+    --secondary: #64748b;     
+    --success: #10b981;       
+    --warning: #f59e0b;       
+    --danger: #ef4444;       
     --dark: #0f172a;
     --light: #f8fafc;
     --glass-bg: rgba(255, 255, 255, 0.95);
@@ -30,7 +29,7 @@ body {
     min-height: 100vh;
 }
 
-/* Overlay Biru Gelap Transparan */
+
 .bg-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +40,7 @@ body {
 .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
 .hidden { display: none !important; }
 
-/* --- GLASS CARD STYLE --- */
+
 .glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
@@ -82,7 +81,7 @@ body {
 h1 { margin: 0 0 5px; font-weight: 700; font-size: 24px; }
 .subtitle { color: var(--secondary); margin-bottom: 30px; font-size: 14px; }
 
-/* FORM ELEMENTS */
+
 .form-group { text-align: left; margin-bottom: 20px; }
 .form-group label {
     display: block; font-size: 13px; font-weight: 600;
@@ -105,7 +104,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-/* BUTTONS */
 .btn {
     padding: 12px 24px;
     border-radius: 10px;
@@ -126,7 +124,7 @@ input:focus, select:focus {
 .btn-small { padding: 8px 16px; font-size: 13px; }
 .btn-icon { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--secondary); }
 
-/* --- ADMIN BUTTONS & STYLE (NEW) --- */
+
 .btn-admin { 
     background: var(--admin-primary); 
     color: white; 
@@ -144,7 +142,7 @@ input:focus, select:focus {
 .switch-auth a { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
 .switch-auth a:hover { text-decoration: underline; }
 
-/* --- DASHBOARD --- */
+
 .dashboard-container { padding: 30px; min-height: 80vh; position: relative; }
 
 .dashboard-header {
@@ -164,14 +162,12 @@ input:focus, select:focus {
 }
 .divider { border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 30px; }
 
-/* GRID LAYOUT */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 25px;
 }
 
-/* CARD ITEM */
 .card {
     background: white;
     border-radius: 16px;
@@ -192,27 +188,24 @@ input:focus, select:focus {
 .card b { font-size: 16px; color: var(--success); }
 .card .btn { margin-top: 15px; width: 100%; }
 
-/* TABLE STYLE */
 table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 10px; }
 th { text-align: left; padding: 15px; color: var(--secondary); font-size: 13px; font-weight: 600; letter-spacing: 0.5px; }
 td { background: white; padding: 15px; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; }
 td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-left: 1px solid #f1f5f9; }
 td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-right: 1px solid #f1f5f9; }
 
-/* MODAL - PERBAIKAN */
 .modal-overlay {
-    background: rgba(15, 23, 42, 0.6); /* Warna latar gelap transparan */
-    backdrop-filter: blur(5px);        /* Efek blur background */
+    background: rgba(15, 23, 42, 0.6); 
+    backdrop-filter: blur(5px);       
     
-    /* INI YANG TADI KURANG: Agar memenuhi layar & posisi di tengah */
     position: fixed; 
     top: 0; 
     left: 0; 
     width: 100%; 
     height: 100%; 
-    display: flex;             /* Flexbox untuk centering */
-    justify-content: center;   /* Tengah secara Horizontal */
-    align-items: center;       /* Tengah secara Vertikal */
+    display: flex;             
+    justify-content: center;   
+    align-items: center;       
     z-index: 999;
 }
 
@@ -222,13 +215,11 @@ td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px;
     padding: 30px; 
     animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); 
     
-    /* Opsional: Tambahkan ini biar lebih aman tampilannya */
     background: var(--glass-bg);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
 }
 
-/* ANIMATIONS */
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -239,7 +230,6 @@ td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px;
 }
 .animate-fade { animation: slideUp 0.4s ease; }
 
-/* RESPONSIVE */
 @media (max-width: 600px) {
     .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; }
     .dashboard-header button { width: 100%; }

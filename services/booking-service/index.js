@@ -7,28 +7,24 @@ const jwt = require('jsonwebtoken');
 const COURT_SERVICE_URL = 'http://padel-court:4000/';
 const SECRET_KEY_USER = 'rahasia_user_booking'; 
 
-// 1. KONEKSI DB
 const sequelize = new Sequelize('padel_db', 'root', 'rootpassword', {
   host: process.env.DB_HOST || 'localhost',
   dialect: 'mysql',
   logging: false
 });
 
-// 2. MODEL
 const Booking = sequelize.define('Booking', {
   user: { type: DataTypes.STRING },
   date: { type: DataTypes.STRING },
   courtId: { type: DataTypes.STRING }
 });
 
-// Model User (Hanya untuk User Biasa)
 const User = sequelize.define('User', {
   username: { type: DataTypes.STRING, unique: true, allowNull: false },
   password: { type: DataTypes.STRING, allowNull: false },
   role: { type: DataTypes.STRING, defaultValue: 'user' }
 });
 
-// 3. SCHEMA
 const typeDefs = gql`
   type Booking {
     id: ID!
@@ -66,7 +62,6 @@ const typeDefs = gql`
   }
 `;
 
-// 4. RESOLVERS
 const resolvers = {
   Booking: {
     courtDetails: async (parent) => {
@@ -81,14 +76,12 @@ const resolvers = {
     bookings: async () => await Booking.findAll(),
   },
   Mutation: {
-    // Register User (Selalu role user)
     register: async (_, { username, password }) => {
       const hashedPassword = await bcrypt.hash(password, 10);
       try {
         return await User.create({ username, password: hashedPassword, role: 'user' });
       } catch (err) { throw new Error("Username sudah dipakai."); }
     },
-    // Login User
     login: async (_, { username, password }) => {
       const user = await User.findOne({ where: { username } });
       if (!user) throw new Error("User tidak ditemukan");
@@ -116,7 +109,6 @@ const startServer = async () => {
         await sequelize.sync();
         console.log("✅ Booking Service Ready (User DB Ready)");
         
-        // PERUBAHAN: Gunakan process.env.PORT atau 4002
         const PORT = process.env.PORT || 4002; 
         
         server.listen({ port: PORT }).then(({ url }) => console.log(`🚀 Booking at ${url}`));

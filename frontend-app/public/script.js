@@ -1,7 +1,5 @@
-// Variabel untuk melacak lapangan yang sedang dilihat admin
 let currentAdminCourtId = '';
 
-// --- FUNGSI INIT (Dipanggil dari auth.js setelah login) ---
 function initDashboard(user, role) {
     document.getElementById('welcome-msg').innerText = `Halo, ${user} 👋`;
 
@@ -16,9 +14,6 @@ function initDashboard(user, role) {
     }
 }
 
-// ==========================================
-// BAGIAN 1: LOGIKA USER (BOOKING)
-// ==========================================
 async function loadCourtsForUser() {
     const courts = await fetchCourts();
     let html = '';
@@ -96,14 +91,11 @@ async function submitBooking(courtId) {
     } catch(err) { alert("Gagal booking."); }
 }
 
-// ==========================================
-// BAGIAN 2: LOGIKA ADMIN (JADWAL, EDIT, HAPUS)
-// ==========================================
+
 async function loadCourtsForAdmin() {
     const courts = await fetchCourts();
     let html = '';
     courts.forEach(c => {
-        // MENGGUNAKAN STYLE BARU (Royal Indigo)
         html += `<div class="card card-admin-border">
             <div>
                 <h4 style="margin:0; color:var(--dark);">${c.name}</h4>

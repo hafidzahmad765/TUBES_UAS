@@ -13,14 +13,12 @@ const sequelize = new Sequelize('padel_db', 'root', 'rootpassword', {
 });
 
 // 2. MODEL DATABASE
-// Model Court (Lapangan)
 const Court = sequelize.define('Court', {
   name: { type: DataTypes.STRING, allowNull: false },
   location: { type: DataTypes.STRING },
   price: { type: DataTypes.INTEGER }
 });
 
-// Model Admin (BARU: Khusus Admin disimpan di sini)
 const Admin = sequelize.define('Admin', {
   username: { type: DataTypes.STRING, unique: true, allowNull: false },
   password: { type: DataTypes.STRING, allowNull: false },
@@ -90,20 +88,14 @@ const resolvers = {
   }
 };
 
-// ... (Bagian 1-4 biarkan saja) ...
-
-// 5. SERVER SETUP (PASTIKAN BAGIAN INI ADA)
-// Jangan sampai baris ini hilang!
 const server = new ApolloServer({ typeDefs, resolvers, cors: { origin: '*', credentials: true } });
 
-// BARU KEMUDIAN FUNGSI STARTSERVER
 const startServer = async () => {
     try {
         await sequelize.authenticate();
         await sequelize.sync(); 
         console.log("✅ Court Service Connected (Admin DB Ready)!");
 
-        // Auto Seeding Courts
         if ((await Court.count()) === 0) {
             await Court.bulkCreate([
                 { name: "Padel Pro Dago", location: "Jl. Dago Atas", price: 150000 },
@@ -113,7 +105,6 @@ const startServer = async () => {
             ]);
         }
 
-        // Auto Seeding Admin
         const adminExists = await Admin.findOne({ where: { username: 'admin' } });
         if (!adminExists) {
             const hash = await bcrypt.hash('admin', 10);
@@ -121,10 +112,8 @@ const startServer = async () => {
             console.log("⚙️ Akun Admin Default Dibuat: admin/admin");
         }
 
-        // PORT 4001
         const PORT = process.env.PORT || 4001;
 
-        // Di sini kita panggil variabel 'server' yang didefinisikan di atas tadi
         server.listen({ port: PORT }).then(({ url }) => {
             console.log(`🚀 Court Service ready at ${url}`);
         });

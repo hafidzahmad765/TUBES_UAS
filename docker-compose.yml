@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # --- DATABASE (Tetap Sama) ---
   mysql-db:
     image: mysql:5.7
     container_name: padel-mysql
@@ -28,12 +27,12 @@ services:
     networks:
       - padel-net
 
-  # --- MICROSERVICES (Dipindahkan ke folder services/) ---
+  
   court-service:
-    build: ./services/court-service  # Path berubah
+    build: ./services/court-service  
     container_name: padel-court
     ports:
-      - "4001:4001" # Tetap expose port asli untuk debugging/inter-service
+      - "4001:4001" 
     depends_on:
       - mysql-db
     environment:
@@ -45,7 +44,7 @@ services:
       - padel-net
 
   booking-service:
-    build: ./services/booking-service # Path berubah
+    build: ./services/booking-service 
     container_name: padel-booking
     ports:
       - "4002:4002"
@@ -60,12 +59,11 @@ services:
     networks:
       - padel-net
 
-  # --- API GATEWAY (BARU) ---
   api-gateway:
     build: ./api-gateway
     container_name: padel-gateway
     ports:
-      - "3000:3000" # Gateway jadi pintu utama di Port 3000
+      - "3000:3000" 
     depends_on:
       - court-service
       - booking-service
@@ -75,12 +73,11 @@ services:
     networks:
       - padel-net
 
-  # --- FRONTEND (Path & Port Berubah) ---
   frontend-app:
     build: ./frontend-app
     container_name: padel-frontend
     ports:
-      - "3002:3000" # Frontend diakses user lewat Browser di 3002
+      - "3002:3000" 
     depends_on:
       - api-gateway
     networks:
